@@ -8,3 +8,5 @@ end
 require "minitest/autorun"
 require "ricecream"
 require "cuco"
+require "controller"
+require "script"
