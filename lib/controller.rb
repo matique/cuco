@@ -46,7 +46,7 @@ class Controller
   private
 
   def run_files(files, type)
-    files.map! { |filename| filename[@pwd_size + 1 .. -1] }
+    files.map! { |filename| filename[@pwd_size + 1..] }
     files.each { |filename| @script.run(filename, type) }
   end
 end

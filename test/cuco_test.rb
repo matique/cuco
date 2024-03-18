@@ -18,14 +18,14 @@ describe Cuco do
     assert_equal options, cuco.options
   end
 
-#  it "coverage options debug" do
-#    out, _err = capture_io do
-#      puts `bin/cuco -d`
-#      # Timeout::timeout(0.1) { puts `bin/cuco -d` }
-#    end
-#
-#    assert_match(/:debug=>true/, out)
-#    assert_match(/script  <.watchr>/, out)
-#    assert_match(/pwd/, out)
-#  end
+  # it "coverage options debug" do
+  #   out, _err = capture_io do
+  #     puts `bin/cuco -d`
+  #     # Timeout::timeout(0.1) { puts `bin/cuco -d` }
+  #   end
+  #
+  #   assert_match(/:debug=>true/, out)
+  #   assert_match(/script  <.watchr>/, out)
+  #   assert_match(/pwd/, out)
+  # end
 end

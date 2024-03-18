@@ -1,5 +1,5 @@
-watch( 'test/.*_test\.rb$' ) {|md| run_it(md[0]) }
-watch( 'lib/(.*)\.rb$' )     {|md| run_it("test/#{md[1]}_test.rb") }
+watch('test/.*_test\.rb$') { |md| run_it(md[0]) }
+watch('lib/(.*)\.rb$') { |md| run_it("test/#{md[1]}_test.rb") }
 
 def run_it(file)
   system %(bundle exec ruby -I test #{file})

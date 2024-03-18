@@ -24,7 +24,7 @@ describe Controller do
   it "runs" do
     cuco.init(options, [])
     assert_raises(Timeout::Error) do
-      Timeout::timeout(0.1) { cuco.run }
+      Timeout.timeout(0.1) { cuco.run }
     end
 
     assert cuco.listener
