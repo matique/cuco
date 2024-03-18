@@ -1,7 +1,5 @@
 require "test_helper"
 require "timeout"
-require "controller"
-require "script"
 
 describe Controller do
   let(:options) { {} }
