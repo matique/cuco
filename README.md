@@ -22,18 +22,14 @@ Most importantly it is **agnostic** to:
 
 ## Installation
 
-As usual:
 ```ruby
 $ gem install cuco
 ```
 
 ## Usage
-
 ```ruby
 $ cuco          # default script file is .watchr
-
-Or
-
+ Or
 $ cuco path/to/script/file
 ```
 
