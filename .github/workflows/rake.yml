@@ -9,8 +9,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ["3.0", 3.3]
-        test_command: ["bundle exec rake test"]
+        ruby: [3.3]
+        test_command: ["bundle exec rake"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -20,5 +20,37 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby_version }}
 #          bundler-cache: true
-      - name: Build and test with Rake
-        run: bundle exec rake
+#      - name: Build and test with Rake
+#        run: bundle exec rake
+    - name: Bundle install
+      run: |
+        bundle config path /home/runner/bundle
+        bundle install
+        bundle update
+    - run: ${{ matrix.test_command }}
+
+
+
+#on: [push]
+#
+#jobs:
+#  test:
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ubuntu-latest]
+#        ruby: ["3.0", "3.2", 3.3, head]
+#        test_command: ["bundle exec rake test"]
+#    runs-on: ${{ matrix.os }}
+#
+#    steps:
+#    - uses: actions/checkout@v3
+#    - uses: ruby/setup-ruby@v1
+#      with:
+#        ruby-version: ${{ matrix.ruby }}
+#    - name: Bundle install
+#      run: |
+#        bundle config path /home/runner/bundle
+#        bundle install
+#        bundle update
+#    - run: ${{ matrix.test_command }}
