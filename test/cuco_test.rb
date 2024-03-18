@@ -12,7 +12,6 @@ describe Cuco do
   it "options" do
     options = {opt: 1234}
     G.init options, []
-#G.print
 
     assert_equal options, G.options
   end

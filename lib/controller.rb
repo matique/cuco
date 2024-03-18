@@ -34,7 +34,7 @@ class Controller
       return
     end
 
-    files.map! { |filename| filename[G.pwd_length + 1 .. -1] }
+    files.map! { |filename| filename[G.pwd_length + 1..] }
     files.each { |filename| file_run(filename, type) }
   end
 

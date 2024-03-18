@@ -2,6 +2,7 @@ require "test_helper"
 
 describe Controller do
   let(:cuco) { Controller.instance }
+  let(:regexp) { '.*\.rb' }
 
   def setup
     G.init({}, [])
@@ -18,7 +19,7 @@ describe Controller do
 
   it "runs" do
     assert_raises(Timeout::Error) do
-      Timeout::timeout(0.1) { cuco.run }
+      Timeout.timeout(0.1) { cuco.run }
     end
 
     assert cuco.listener
@@ -26,19 +27,18 @@ describe Controller do
 
   it "read .watchr" do
     assert_raises(Timeout::Error) do
-      Timeout::timeout(0.1) { cuco.run }
+      Timeout.timeout(0.1) { cuco.run }
     end
-
   end
 
   it "run" do
-    G.script = Script.new "watch('.*\.rb') { raise IOError }"
+    G.script = Script.new "watch(#{regexp}) { raise IOError }"
 
     assert_raises(IOError) { cuco.file_run "a.rb" }
   end
 
   it "does not run" do
-    G.script = Script.new "watch('.*\.rb') { raise IOError }"
+    G.script = Script.new "watch(#{regexp}) { raise IOError }"
 
     cuco.file_run "a.no"
   end
