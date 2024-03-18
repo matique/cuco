@@ -7,6 +7,8 @@ end
 
 require "minitest/autorun"
 require "ricecream"
-require "cuco"
+
 require "controller"
+require "cuco"
 require "script"
+require "timeout"

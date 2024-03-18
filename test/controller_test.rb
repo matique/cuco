@@ -1,10 +1,11 @@
 require "test_helper"
-require "timeout"
 
 describe Controller do
-  let(:options) { {} }
   let(:cuco) { Controller.instance }
-  let(:script) { Script.new }
+
+  def setup
+    G.init({}, [])
+  end
 
   def teardown
     cuco.stop
@@ -15,36 +16,37 @@ describe Controller do
     assert_nil cuco.listener
   end
 
-  it "initializes" do
-    cuco.init(options, [])
-  end
-
   it "runs" do
-    cuco.init(options, [])
     assert_raises(Timeout::Error) do
-      Timeout.timeout(0.1) { cuco.run }
+      Timeout::timeout(0.1) { cuco.run }
     end
 
     assert cuco.listener
   end
 
   it "read .watchr" do
-    filename = ".watchr"
+    assert_raises(Timeout::Error) do
+      Timeout::timeout(0.1) { cuco.run }
+    end
 
-    script.load_file filename
-    assert_equal 2, script.__rules.size
   end
 
-  private
+  it "run" do
+    G.script = Script.new "watch('.*\.rb') { raise IOError }"
 
-  def test_files
-    dir = File.join(Dir.pwd, "test", "files")
-    files = find_files_in(dir)
-    files.collect { |file| File.join(dir, file) }
+    assert_raises(IOError) { cuco.file_run "a.rb" }
   end
 
-  def find_files_in(dir)
-    entries = Dir.entries(dir)
-    entries.reject { |entry| File.directory?(entry) }
+  it "does not run" do
+    G.script = Script.new "watch('.*\.rb') { raise IOError }"
+
+    cuco.file_run "a.no"
+  end
+
+  it "receives a matchdata" do
+    G.script = Script.new "watch('ab(.)') { |m| [m[0], m[1]] }"
+
+    rule = G.script.__rules.last
+    assert_equal ["abc", "c"], cuco.match_run(rule, "abc")
   end
 end

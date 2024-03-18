@@ -7,46 +7,49 @@ class Controller
   include Singleton
 
   attr_reader :listener
-  attr_reader :options
-  attr_reader :pwd_size
-  attr_reader :script_name
-  attr_reader :script
-
-  def init(options, argv)
-    @options = options
-    @script_name = argv.first || ".watchr"
-    @pwd_size = Dir.pwd.size
-
-    if @options[:debug]
-      puts "options #{@options}"
-      puts "pwd     <#{@pwd}>"
-      puts "script_name <#{@script_name}>"
-    end
-  end
 
   def run
-    stop
-    @script = Script.new
-    @script.load_file(@script_name)
+    puts "*** Controller.run" if debug
     @listener = Listen.to(".") do |modified, added, removed|
       run_files(modified, :modified)
       run_files(added, :added)
     end
 
     @listener.start
+    puts "*** Listen started" if debug
     sleep
   end
 
   def stop
+    puts "*** Controller.stop" if debug
     @listener&.stop
-    @script = nil
+    G.script = nil
     @listener = nil
   end
 
-  private
-
   def run_files(files, type)
-    files.map! { |filename| filename[@pwd_size + 1..] }
-    files.each { |filename| @script.run(filename, type) }
+    puts "*** Controller.run_files(#{files}, #{type})" if debug
+    if files.include?(G.scriptname)
+      G.script = Script.new File.read(G.scriptname)
+      return
+    end
+
+    files.map! { |filename| filename[G.pwd_length + 1 .. -1] }
+    files.each { |filename| file_run(filename, type) }
+  end
+
+  def file_run(pattern, type = nil)
+    puts "*** file_run(#{pattern}, #{type})" if debug
+    G.script.__rules.select { |rule| match_run(rule, pattern) }
+  end
+
+  def match_run(rule, pattern)
+    md = pattern.match(rule.pattern)
+    puts "*** match_run #{rule}" if debug
+    rule.proc.call(md) if md
+  end
+
+  def debug
+    G.options[:debug]
   end
 end
