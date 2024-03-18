@@ -16,9 +16,8 @@ for the particular modified files.
 
 Most importantly it is **agnostic** to:
 
-* Web frameworks
 * Test frameworks
-* Ruby interpreters
+* Web frameworks
 
 ## Installation
 ```ruby
@@ -32,7 +31,11 @@ $ cuco          # default script file is .watchr
 $ cuco path/to/script/file
 ```
 
-## A simple example of a script file:
+will monitor files in the current directory tree
+and react to events on those
+files in accordance with the script.
+
+## A simple example of a script file (using Minitest):
 ```ruby
 watch( 'test/.*_test\.rb$' ) {|md| run_it(md[0]) }
 watch( 'lib/(.*)\.rb$' )     {|md| run_it("test/#{md[1]}_test.rb") }
