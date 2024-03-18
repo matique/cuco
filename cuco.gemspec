@@ -1,0 +1,24 @@
+require File.expand_path("../lib/version", __FILE__)
+
+Gem::Specification.new do |s|
+  s.name = "cuco"
+  s.version = Cuco::VERSION
+  s.summary = "A file watcher"
+  s.description = "A simple and flexible file watcher"
+
+  s.authors = ["Dittmar Krall"]
+  s.email = "dittmar.krall@matiq.de"
+  s.homepage = "http://www.matiq.de"
+  s.license = "MIT"
+
+  s.files = `git ls-files`.split("\n")
+  s.executables = `git ls-files -- bin/*`
+    .split("\n").map { |f| File.basename(f) }
+  s.require_paths = ["lib"]
+
+  s.add_dependency "micro-optparse"
+  s.add_dependency "listen"
+
+  s.add_development_dependency "minitest"
+  s.add_development_dependency "rake"
+end

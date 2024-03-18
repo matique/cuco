@@ -1,0 +1,18 @@
+#! /usr/bin/env ruby
+
+lib = File.expand_path("../lib/", __dir__)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
+
+require "version"
+require "controller"
+require "micro-optparse"
+
+options = Parser.new do |p|
+  p.banner = "Usage: cuco [options] [.watchr] # a file watcher"
+  p.version = "cuco #{Cuco::VERSION}"
+  p.option :debug, "Debugging output", default: false
+end.process!
+
+cuco = Controller.instance
+cuco.init(options, ARGV)
+cuco.run
