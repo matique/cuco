@@ -32,13 +32,13 @@ describe Controller do
   end
 
   it "run" do
-    G.script = Script.new "watch(#{regexp}) { raise IOError }"
+    G.script = Script.new "watch('#{regexp}') { raise IOError }"
 
     assert_raises(IOError) { cuco.file_run "a.rb" }
   end
 
   it "does not run" do
-    G.script = Script.new "watch(#{regexp}) { raise IOError }"
+    G.script = Script.new "watch('#{regexp}') { raise IOError }"
 
     cuco.file_run "a.no"
   end
