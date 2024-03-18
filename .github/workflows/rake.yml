@@ -22,12 +22,12 @@ jobs:
 #          bundler-cache: true
 #      - name: Build and test with Rake
 #        run: bundle exec rake
-    - name: Bundle install
-      run: |
-        bundle config path /home/runner/bundle
-        bundle install
-        bundle update
-    - run: ${{ matrix.test_command }}
+      - name: Bundle install
+        run: |
+          bundle config path /home/runner/bundle
+          bundle install
+          bundle update
+      - run: ${{ matrix.test_command }}
 
 
 
