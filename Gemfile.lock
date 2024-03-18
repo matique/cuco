@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cuco (0.0.4)
+    cuco (0.0.6)
       listen
       micro-optparse
 
