@@ -21,7 +21,6 @@ Most importantly it is **agnostic** to:
 * Ruby interpreters
 
 ## Installation
-
 ```ruby
 $ gem install cuco
 ```
@@ -34,7 +33,6 @@ $ cuco path/to/script/file
 ```
 
 ## A simple example of a script file:
-
 ```ruby
 watch( 'test/.*_test\.rb$' ) {|md| run_it(md[0]) }
 watch( 'lib/(.*)\.rb$' )     {|md| run_it("test/#{md[1]}_test.rb") }
