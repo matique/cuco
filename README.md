@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/cuco.png)](http://badge.fury.io/rb/cuco)
 [![GEM Downloads](https://img.shields.io/gem/dt/cuco?color=168AFE&logo=ruby&logoColor=FE1616)](https://rubygems.org/gems/cuco)
 
-*Cuco* watch files in a directory and take an action when they change.
+*Cuco* watches files in a directory and take an action when they change.
 
 *Cuco* is controlled by a user-supplied script file.
 Intermixed "watch" commands specify what to do
@@ -38,7 +38,10 @@ $ cuco path/to/script/file
 will monitor files in the current directory tree
 and react to events on those files in accordance with the script.
 
-## A simple example of a script file (using Minitest):
+## A simple example of a script file
+
+This sample script is intended for testing purposes with Minitest.
+*md* is the match-data (see Ruby regular expressions).
 
 ```ruby
 watch( 'test/.*_test\.rb$' ) { |md| run_it(md[0]) }
@@ -59,7 +62,6 @@ Scripts are pure Ruby.
 Intermixed are "watch" rules that match observed files to an action.
 The matching is achieved by a pattern (a regular expression) parameter.
 The action is specified by a block (see above sample).
-*md* is the match-data.
 
 Updates to script files are picked up on the fly (no need to restart *cuco*)
 so experimenting is painless.
