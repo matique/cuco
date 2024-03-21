@@ -1,6 +1,10 @@
 require "test_helper"
 
 describe Cuco do
+  def setup
+    G.init({}, [])
+  end
+
   it "usage" do
     out, _err = capture_io do
       puts `bin/cuco -h`
