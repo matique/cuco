@@ -16,9 +16,9 @@ Gem::Specification.new do |s|
     .split("\n").map { |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency "micro-optparse", "~> 0"
-  s.add_runtime_dependency "listen", "~> 0"
+  s.add_runtime_dependency "micro-optparse"
+  s.add_runtime_dependency "listen"
 
-  s.add_development_dependency "minitest", "~> 0"
-  s.add_development_dependency "rake", "~> 0"
+  s.add_development_dependency "minitest"
+  s.add_development_dependency "rake"
 end
