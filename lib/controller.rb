@@ -49,8 +49,8 @@ class Controller
   def find_rules(pattern, type)
     puts "*** find_rules(#{pattern}, #{type})" if debug
     G.script.__rules.reverse.select { |rule|
-       pattern.match(rule.pattern) &&
-      (rule.event_type.nil? || rule.event_type == type)
+      pattern.match(rule.pattern) &&
+        (rule.event_type.nil? || rule.event_type == type)
     }
   end
 
