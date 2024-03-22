@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/cuco.png)](http://badge.fury.io/rb/cuco)
 [![GEM Downloads](https://img.shields.io/gem/dt/cuco?color=168AFE&logo=ruby&logoColor=FE1616)](https://rubygems.org/gems/cuco)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://choosealicense.com/licenses/mit/)
 
 *Cuco* watches files in a directory and take an action when they change.
 
