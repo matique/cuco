@@ -40,7 +40,18 @@ class Controller
 
   def file_run(pattern, type = nil)
     puts "*** file_run(#{pattern}, #{type})" if debug
-    G.script.__rules.select { |rule| match_run(rule, pattern) }
+    rules = find_rules(pattern, type)
+    rules.each { |rule| match_run(rule, pattern) }
+  end
+
+  private
+
+  def find_rules(pattern, type)
+    puts "*** find_rules(#{pattern}, #{type})" if debug
+    G.script.__rules.reverse.select { |rule|
+       pattern.match(rule.pattern) &&
+      (rule.event_type.nil? || rule.event_type == type)
+    }
   end
 
   def match_run(rule, pattern)

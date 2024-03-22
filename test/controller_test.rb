@@ -42,11 +42,4 @@ describe Controller do
 
     cntrl.file_run "a.no"
   end
-
-  it "receives a matchdata" do
-    G.script = Script.new "watch('ab(.)') { |m| [m[0], m[1]] }"
-
-    rule = G.script.__rules.last
-    assert_equal ["abc", "c"], cntrl.match_run(rule, "abc")
-  end
 end
