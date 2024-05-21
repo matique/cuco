@@ -11,7 +11,11 @@ Gem::Specification.new do |s|
   s.homepage = "http://www.matiq.de"
   s.license = "MIT"
 
-  s.files = `git ls-files`.split("\n")
+  s.files = Dir["bin/**/*"]
+  s.files += Dir["lib/**/*"]
+  s.files += Dir["scripts/**/*"]
+  s.extra_rdoc_files = Dir["README.md", "MIT-LICENSE"]
+
   s.executables = `git ls-files -- bin/*`
     .split("\n").map { |f| File.basename(f) }
   s.require_paths = ["lib"]
