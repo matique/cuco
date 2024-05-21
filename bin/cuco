@@ -3,9 +3,9 @@
 lib = File.expand_path("../lib/", __dir__)
 $LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
-require "version"
-require "cuco"
-require "controller"
+require "cuco/version"
+require "cuco/cuco"
+require "cuco/controller"
 require "micro-optparse"
 
 options = Parser.new do |p|

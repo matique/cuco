@@ -1,7 +1,7 @@
 require "listen"
 require "singleton"
-require "cuco"
-require "script"
+require "cuco/cuco"
+require "cuco/script"
 
 class Controller
   include Singleton

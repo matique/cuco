@@ -9,8 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ["3.0", 3.3]
-        test_command: ["bundle exec rake"]
+        ruby: ["3.0", "3.3"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -19,13 +18,11 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby_version }}
-#          bundler-cache: true
-#      - name: Build and test with Rake
-#        run: bundle exec rake
+          bundler-cache: true
       - name: Bundle install
         run: |
           bundle config path /home/runner/bundle
           bundle install
           bundle update
-      - name: test with Rake
-        run: ${{ matrix.test_command }}
+      - name: Run the default task
+        run: bundle exec rake

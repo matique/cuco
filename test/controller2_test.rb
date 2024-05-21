@@ -13,9 +13,9 @@ describe Controller do
     R.acc = ""
     G.init({}, [])
     G.script = Script.new <<~EOS
-      watch('file')            { R.acc << "n" }
-      watch('file', :added)    { R.acc << "a" }
-      watch('file', :modified) { R.acc << "m" }
+      watch("file")            { R.acc << "n" }
+      watch("file", :added)    { R.acc << "a" }
+      watch("file", :modified) { R.acc << "m" }
     EOS
   end
 

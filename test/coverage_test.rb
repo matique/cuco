@@ -14,6 +14,8 @@ describe "Coverage" do
 
   it "coverage run files script" do
     names = [G.scriptname]
-    cntrl.run_files(names, nil)
+    _out, _err = capture_io do
+      cntrl.run_files(names, nil)
+    end
   end
 end
