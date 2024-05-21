@@ -72,6 +72,8 @@ since the whole command is custom.
 The above actions could just as easily call "jruby", "ruby --rubygems",
 "ruby -I lib", etc. or any combination of these.
 
+See directory _scripts_ for samples.
+
 ## Miscellaneous
 
 *Cuco* is heavily inspired by:
