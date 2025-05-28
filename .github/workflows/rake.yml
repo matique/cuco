@@ -1,4 +1,3 @@
-# see also https://github.com/whitequark/parser/blob/master/.github/workflows/test.yml
 name: Rake
 
 on: [push]
@@ -8,21 +7,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        ruby: ["3.0", "3.3"]
-    runs-on: ${{ matrix.os }}
+        ruby_version: [head, "3.4", "3.1"]
+        gemfile:
+          - Gemfile
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby_version }}
-#          bundler-cache: true
-      - name: Bundle install
-        run: |
-          bundle config path /home/runner/bundle
-          bundle install
-          bundle update
-      - name: Run the default task
+          bundler-cache: true # 'bundle install' and cache
+      - name: Build and test with Rake
         run: bundle exec rake
