@@ -1,0 +1,7 @@
+# ~/.gitignore included
+
+.bundle/
+.watchr
+
+**/*.log
+**/*.lock
