@@ -1,5 +1,11 @@
 # Cuco
 
+[![Gem Version](https://img.shields.io/gem/v/cuco?color=168AFE&logo=rubygems&logoColor=FE1616)](https://rubygems.org/gems/cuco)
+[![Downloads](https://img.shields.io/gem/dt/cuco?color=168AFE&logo=rubygems&logoColor=FE1616)](https://rubygems.org/gems/cuco)
+[![GitHub Build](https://img.shields.io/github/actions/workflow/status/matique/cuco/rake.yml?logo=github)](https://github.com/matique/cuco/actions/workflows/rake.yml)
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-168AFE.svg)](https://github.com/standardrb/standard)
+[![MIT License](https://img.shields.io/badge/license-MIT-168AFE.svg)](http://choosealicense.com/licenses/mit/)
+
 [![Gem Version](https://badge.fury.io/rb/cuco.svg)](http://badge.fury.io/rb/cuco)
 [![GEM Downloads](https://img.shields.io/gem/dt/cuco?color=168AFE&logo=ruby&logoColor=FE1616)](https://rubygems.org/gems/cuco)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://choosealicense.com/licenses/mit/)
