@@ -3,9 +3,9 @@ HH = "#" * 22 unless defined?(HH)
 H = "#" * 5 unless defined?(H)
 
 def usage
-  puts <<~EOS
-    Ctrl-\\ or ctrl-4   Running all tests
-    Ctrl-C             Exit
+  puts <<-EOS
+  Ctrl-\\ or ctrl-4   Running all tests
+  Ctrl-C             Exit
   EOS
 end
 
@@ -18,9 +18,8 @@ end
 def run_it(type, files)
   files.split(" ").flatten.each do |file|
     case type
-    # when "test" then run %(rails test #{file})
-    when "test" then run %(spring rails test #{file})
-    #  when 'spec';  run %(spring rspec -X #{file})
+    when "test" then run %(bundle exec ruby -I test #{file})
+    #  when 'spec';  run %(rspec -X #{file})
     else; puts "#{H} unknown type: #{type}, file: #{file}"
     end
   end
@@ -28,8 +27,7 @@ end
 
 def run_all_tests
   puts "\n#{HH} Running all tests #{HH}\n"
-  system "spring stop"
-  TESTING.each { |dir| run "bundle exec rails #{dir}" if File.exist?(dir) }
+  TESTING.each { |dir| run "bundle exec rake #{dir}" if File.exist?(dir) }
 end
 
 def run_matching_files(base)
