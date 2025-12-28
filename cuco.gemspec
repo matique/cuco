@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 3"
 
   s.add_runtime_dependency "listen"
+  s.add_runtime_dependency "logger"
   s.add_runtime_dependency "micro-optparse"
 
   s.add_development_dependency "minitest"

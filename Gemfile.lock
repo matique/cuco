@@ -3,6 +3,7 @@ PATH
   specs:
     cuco (0.1.5)
       listen
+      logger
       micro-optparse
 
 GEM
