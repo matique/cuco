@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cuco (0.1.5)
+    cuco (0.1.6)
       listen
       logger
       micro-optparse
@@ -91,7 +91,7 @@ DEPENDENCIES
 
 CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
-  cuco (0.1.5)
+  cuco (0.1.6)
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   ffi (1.17.2) sha256=297235842e5947cc3036ebe64077584bff583cd7a4e94e9a02fdec399ef46da6
   json (2.18.0) sha256=b10506aee4183f5cf49e0efc48073d7b75843ce3782c68dbeb763351c08fd505
