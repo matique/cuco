@@ -17,7 +17,8 @@ class Controller
 
     @listener.start
     puts "*** Listen started" if debug
-    sleep
+    # sleep # fails with Ruby 4.0.0
+    sleep 24 * 60 * 60
   end
 
   def stop
