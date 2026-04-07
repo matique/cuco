@@ -83,5 +83,5 @@ See directory _scripts_ for samples.
 * gem watchr
 * gem observr (a follow-up of gem watchr)
 
-Copyright (c) 2024-2025 Dittmar Krall (www.matiq.com),
+Copyright (c) 2024-2026 Dittmar Krall (www.matiq.com),
 released under the [MIT license](https://opensource.org/licenses/MIT).
