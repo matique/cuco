@@ -7,7 +7,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: [head, "3.4", "3.2"]
+        ruby_version: [head, "3.4", "3.3"]
+        # ruby_version: [head, "3.4", "3.2"]
         gemfile:
           - Gemfile
     runs-on: ubuntu-latest
