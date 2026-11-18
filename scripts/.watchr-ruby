@@ -1,0 +1,145 @@
+TESTING = %w[test]
+HH = "#" * 22 unless defined?(HH)
+H = "#" * 5 unless defined?(H)
+
+def usage
+  puts <<~EOS
+    Ctrl-\\ or ctrl-4   Running all tests
+    Ctrl-C             Exit
+  EOS
+end
+
+def run(*cmd)
+  puts "#{HH} #{Time.now} #{HH}"
+  puts "#{H} #{cmd.join(" ")}"
+
+  system("/usr/bin/time", "--format", "#{HH} Elapsed time %E", *cmd)
+end
+
+def run_it(type, files)
+  # files.split(" ").flatten.each do |file|
+  files.each do |file|
+    case type
+    # when "test" then run %(rails test #{file})
+    # when "test" then run %(spring rails test #{file})
+    when "test" then run %(ruby -I test #{file})
+    #  when 'spec';  run %(spring rspec -X #{file})
+    else; puts "#{H} unknown type: #{type}, file: #{file}"
+    end
+  end
+end
+
+def run_all_tests
+  puts "\n#{HH} Running all tests #{HH}\n"
+  run "rake", "test"
+  # run "rake test"
+end
+
+def run_matching_files(base)
+  base = File.basename(base).sub(/_.*/, "")
+  pattern = /#{Regexp.escape(base)}_.*_test\.rb\z/
+
+  TESTING.each do |type|
+    files = Dir["#{type}/**/*.rb"].select do |file|
+      File.basename(file).match?(pattern)
+    end
+
+    run_it type, files unless files.empty?
+  end
+end
+
+# def run_matching_files(base)
+#   base = base.split("_").first
+#   TESTING.each { |type|
+#     files = Dir["#{type}/**/*.rb"].select { |file| file =~ /#{base}_.*.rb/ }
+#     run_it type, files
+#     # run_it type, files.join(" ") unless files.empty?
+#   }
+# end
+
+TESTING.each { |type|
+  watch("#{type}/#{type}_helper.rb$") { run_all_tests }
+  watch("#{type}/.*_#{type}.rb$") { |match| run_it type, [match[0]] }
+  # watch("#{type}/.*/*_#{type}.rb$") { |match| run_it type, match[0] }
+  watch(".*/(.*).rb$") { |m|
+    run_matching_files("#{m[1]}_#{type}.rb") unless m[0].match(/#{type}/)
+  }
+}
+
+Signal.trap("QUIT") { run_all_tests }          # Ctrl-\ or ctrl-4
+Signal.trap("INT") { abort("Interrupted\n") }  # Ctrl-C
+usage
+
+
+# TESTING = %w[test]
+#
+# HH = "#" * 22 unless defined?(HH)
+# H = "#" * 5 unless defined?(H)
+#
+# def usage
+#   puts <<~EOS
+#     Ctrl-\\ or ctrl-4   Running all tests
+#     Ctrl-C             Exit
+#   EOS
+# end
+#
+# def run(*cmd)
+#   puts "#{HH} #{Time.now} #{HH}"
+#   puts "#{H} #{cmd.join(" ")}"
+#
+#   system("/usr/bin/time", "--format", "#{HH} Elapsed time %E", *cmd)
+# end
+#
+# def run_it(type, files)
+#   files.each do |file|
+#     case type
+#     when "test"
+#       run "ruby", "-I", "test", file
+#     else
+#       puts "#{H} unknown type: #{type}, file: #{file}"
+#     end
+#   end
+# end
+#
+# def run_all_tests
+#   puts "\n#{HH} Running all tests #{HH}\n"
+#   run "rake", "test"
+# end
+#
+# def run_matching_files(base)
+#   base = File.basename(base).sub(/_.*/, "")
+#   pattern = /#{Regexp.escape(base)}_.*_test\.rb\z/
+#
+#   TESTING.each do |type|
+#     files = Dir["#{type}/**/*.rb"].select do |file|
+#       File.basename(file).match?(pattern)
+#     end
+#
+#     run_it type, files unless files.empty?
+#   end
+# end
+#
+# TESTING.each do |type|
+#   watch("#{type}/#{type}_helper.rb$") do
+#     run_all_tests
+#   end
+#
+#   watch("#{type}/.*_#{type}.rb$") do |match|
+#     run_it type, [match[0]]
+#   end
+#
+#   watch(".*/(.*).rb$") do |match|
+#     run_matching_files("#{match[1]}_#{type}.rb") unless
+#       match[0].match?(/#{type}/)
+#   end
+# end
+#
+# Signal.trap("QUIT") do
+#   # Defer test execution outside the signal handler.
+# end
+#
+# Signal.trap("INT") do
+#   # Request graceful shutdown.
+# end
+#
+# usage

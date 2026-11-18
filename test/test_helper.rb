@@ -1,14 +1,19 @@
 if ENV["COVERAGE"]
   require "simplecov"
+
   SimpleCov.start do
     add_filter "/test/"
   end
 end
 
+
+require "timeout"
 require "minitest/autorun"
 require "ricecream"
 
-require "cuco/controller"
-require "cuco/cuco"
-require "cuco/script"
-require "timeout"
+lib = File.expand_path("../lib/", __dir__)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
+
+require "controller"
+require "global"
+require "script"

@@ -1,4 +1,4 @@
-require_relative "lib/cuco/version"
+require_relative "lib/version"
 
 Gem::Specification.new do |s|
   s.name = "cuco"
@@ -8,21 +8,19 @@ Gem::Specification.new do |s|
 
   s.authors = ["Dittmar Krall"]
   s.email = "dittmar.krall@matiq.de"
-  s.homepage = "http://www.matiq.de"
+  s.homepage = "https://www.matiq.de"
   s.license = "MIT"
 
-  s.files = Dir["bin/**/*"]
-  s.files += Dir["lib/**/*"]
-  s.files += Dir["scripts/**/*"]
+  s.files = Dir["bin/**/*", "lib/**/*", "scripts/**/*"]
+  s.files += Dir["README.md", "MIT-LICENSE"]
   s.extra_rdoc_files = Dir["README.md", "MIT-LICENSE"]
 
-  s.executables = `git ls-files -- bin/*`
-    .split("\n").map { |f| File.basename(f) }
+  s.bindir = "bin"
+  s.executables = ["cuco"]
   s.require_paths = ["lib"]
-  s.required_ruby_version = ">= 3"
+  s.required_ruby_version = ">= 3.2"
 
   s.add_runtime_dependency "listen"
-  s.add_runtime_dependency "logger"
   s.add_runtime_dependency "micro-optparse"
 
   s.add_development_dependency "minitest"

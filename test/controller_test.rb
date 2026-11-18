@@ -5,41 +5,38 @@ describe Controller do
   let(:regexp) { '.*\.rb' }
 
   def setup
-    G.init({}, [])
+    G.init
   end
 
   def teardown
+    Script.reset
     cntrl.stop
   end
 
   it "stops" do
     cntrl.stop
+
     assert_nil cntrl.listener
   end
 
-  it "runs" do
-    assert_raises(Timeout::Error) do
-      Timeout.timeout(0.1) { cntrl.run }
-    end
+  it "propagates callback exceptions" do
+    Script.load "watch('#{regexp}') { raise IOError }"
 
-    assert cntrl.listener
-  end
-
-  it "read .watchr" do
-    assert_raises(Timeout::Error) do
-      Timeout.timeout(0.1) { cntrl.run }
+    assert_raises(IOError) do
+      cntrl.send(:run_file, "a.rb")
     end
   end
 
-  it "run" do
-    G.script = Script.new "watch('#{regexp}') { raise IOError }"
+  it "does not execute nonmatching rules" do
+    Script.load "watch('#{regexp}') { raise IOError }"
 
-    assert_raises(IOError) { cntrl.file_run "a.rb" }
+    cntrl.send(:run_file, "a.txt")
   end
 
-  it "does not run" do
-    G.script = Script.new "watch('#{regexp}') { raise IOError }"
+  it "can stop multiple times" do
+    cntrl.stop
+    cntrl.stop
 
-    cntrl.file_run "a.no"
+    assert_nil cntrl.listener
   end
 end

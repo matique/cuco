@@ -40,7 +40,7 @@ That's all it takes to get started.
 | Event-driven | powered by the listen gem |
 | Portable     | runs wherever Ruby runs |
 
-## Requirements
+### Requirements
 
 - Ruby 3.2 or newer
 
