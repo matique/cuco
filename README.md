@@ -33,36 +33,12 @@ That's all it takes to get started.
 
 *Cuco* is:
 
-| :---        |    :----   |
+|   |    |
+|---|----|
 | Simple       | a small and straightforward API |
 | Flexible     | watch rules are ordinary Ruby code |
 | Event-driven | powered by the listen gem |
 | Portable     | runs wherever Ruby runs |
-
-## aa
-
-
-&nbsp; | &nbsp;
------- | -----
-Stuff  | More things
-
-## aa
-
-| | |
-|---|---|
-| sdasda | asdsa |
-
-## aa
-
-|       |          |
-|-------|----------|
-| Alice | Engineer |
-| Bob   | Designer |
-
-
-## aa
-
-
 
 ## Requirements
 
@@ -184,8 +160,10 @@ end
 
 For a file named lib/controller.rb, the callback receives:
 
+| | |
+|-|-|
 | match[0] | lib/controller.rb |
-| match[1] | controller        |
+| match[1] | controller |
 
 ### Rule execution order
 
