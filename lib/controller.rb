@@ -1,6 +1,5 @@
 require "listen"
 require "singleton"
-require "pathname"
 
 class Controller
   include Singleton
@@ -20,7 +19,7 @@ class Controller
     puts "*** Listen started" if debug
 
     sleep
-  rescue StandardError
+  rescue
     listener&.stop
     @listener = nil
     raise

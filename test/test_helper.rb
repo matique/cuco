@@ -6,7 +6,6 @@ if ENV["COVERAGE"]
   end
 end
 
-
 require "timeout"
 require "minitest/autorun"
 require "ricecream"
