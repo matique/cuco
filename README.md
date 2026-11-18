@@ -6,15 +6,19 @@
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-168AFE.svg)](https://github.com/standardrb/standard)
 [![MIT License](https://img.shields.io/badge/license-MIT-168AFE.svg)](http://choosealicense.com/licenses/mit/)
 
-A simple file-watching utility written in Ruby.
+*Cuco* is a simple and flexible file-watching utility written in Ruby.
 
-*Cuco* watches a directory for filesystem changes and
-executes callbacks when filenames match registered patterns.
+It monitors a directory for filesystem changes and
+executes Ruby callbacks whenever filenames match registered patterns.
 
-Watch rules are defined in a user-supplied Ruby script
-(usually called .watchr).
-Intermixed "watch" commands specify what to do
-for the particular modified files.
+Watch rules are defined in a Ruby script, usually named .watchr.
+
+```ruby
+watch('\.rb$') do |match|
+  puts "Ruby file changed: #{match[0]}"
+end
+```
+That's all it takes to get started.
 
 ### Features
 
@@ -22,35 +26,44 @@ for the particular modified files.
 * React to added, modified, and removed files
 * Filter rules by event type
 * Access regular-expression matches inside callbacks
+* Register multiple rules and execute them in order
 * Reload the watch script automatically when it changes
 * Preserve previously loaded rules when a script fails to load
-* Execute multiple matching rules in registration order
+* Execute arbitrary Ruby code in callbacks.
 
 *Cuco* is:
+
+| Simple       | a small and straightforward API |
+| Flexible     | watch rules are ordinary Ruby code |
+| Event-driven | powered by the listen gem |
+| Portable     | runs wherever Ruby runs |
 
 * Simple to use
 * Highly flexible
 * Evented               ( uses gem listen )
 * Portable              ( Ruby )
 
+## Requirements
+
+- Ruby 3.2 or newer
+
 ## Installation
+
+Install *Cuco* using RubyGems:
 
 ```ruby
 $ gem install cuco
 ```
 
-It requires:
+This automatically installs its runtime dependencies.
 
-- Ruby 3.2 or newer
-- Bundler
-
-## Usage
+## Quick Start
 
 Create a _.watchr_ file in your project directory:
 
 ```ruby
 # .watchr
-puts "Hello World"
+
 watch(".*\.rb$") do |match|
   # Callback
   puts "Ruby file changed: #{match[0]}"
@@ -63,82 +76,190 @@ Start Cuco:
 $ cuco
 ```
 
-*Cuco* now monitors the current working directory
-and executes the callback whenever a matching file
-is added, modified, or removed.
+*Cuco* now monitors the current working directory.
 
-## A simple example of a script file
+Whenever a matching file is added, modified, or removed,
+the callback is executed.
 
-This sample script is intended for testing purposes with Minitest.
-*md* is the match-data (see Ruby regular expressions).
+You can also specify a different watch script:
 
 ```ruby
-watch( 'test/.*_test\.rb$' ) { |md| run_it(md[0]) }
-watch( 'lib/(.*)\.rb$' )     { |md| run_it("test/#{md[1]}_test.rb") }
-
-def run_it(file)
-  system %(bundle exec ruby -I test #{file})
-end
-
-Signal.trap("QUIT") { system("bundle exec rake") } # Ctrl-\ or ctrl-4
-Signal.trap("INT")  { abort("Interrupted\n") }     # Ctrl-C
+$ cuco scripts/.watchr-rails
 ```
 
-## Script
+## Watch Scripts
 
-Scripts are pure Ruby:
+Watch scripts are ordinary Ruby files.
 
+They can contain arbitrary Ruby code, including method definitions,
+constants, and watch declarations.
+
+The watch method registers a rule consisting of:
+
+- A filename pattern
+- An optional filesystem event type
+- A callback block
+
+### Basic rules
+
+A pattern can be either a String or a Regexp.
+
+String patterns are automatically converted into regular expressions.
 ```ruby
-puts "Hello World"
-
-watch(".*\.rb$") do |match|
-  # Callback
+watch('\.rb$') do |match|
   puts "Ruby file changed: #{match[0]}"
 end
-```
 
-Intermixed are _watch_ rules that match observed files to an action.
-The matching is achieved by a _match specification_.
-The action is specified by a block (see above sample).
-
-Updates to the _script_ file are picked up
-on the fly (no need to restart *cuco*),
-so experimenting is painless.
-If loading the new script fails,
-the previously registered rules are preserved.
-
-If the watch script is removed, its registered rules are cleared.
-
-It's easy to see why *cuco* is so flexible,
-since the whole command is custom.
-The above actions could just as easily call "jruby", "ruby --rubygems",
-"ruby -I lib", etc. or any combination of these.
-
-See directory _scripts_ for more samples.
-
-## Match Specification
-
-The _watch_ method registers a rule consisting of a filename _pattern_
-and an optional _event type_.
-
-Rules are executed in registration order.
-
-_Patterns_ can be strings (converted to regular expressions)
-or regular expressions:
-
-By default, a rule matches all three filesystem _event types_:
-
-- :added
-- :modified
-- :removed
-
-You can restrict a rule to a specific _event type_:
-
-```ruby
-watch('\.rb$', :modified) do |match|
-  puts "Modified: #{match[0]}"
+watch(/\.erb$/) do |match|
+  puts "ERB file changed: #{match[0]}"
 end
 ```
+
+Patterns are matched against filenames relative to the watched directory.
+
+Remember that patterns are regular expressions, not shell globs.
+
+### Event types
+
+By default, a rule responds to all three filesystem event types:
+
+| Event     | Description         |
+|-----------|---------------------|
+| :added    | A file was added    |
+| :modified | A file was modified |
+| :removed  | A file was removed  |
+
+You can restrict a rule to a particular event type:
+```ruby
+watch('\.rb$', :added) do |match|
+  puts "New Ruby file: #{match[0]}"
+end
+
+watch('\.rb$', :modified) do |match|
+  puts "Modified Ruby file: #{match[0]}"
+end
+
+watch('\.rb$', :removed) do |match|
+  puts "Removed Ruby file: #{match[0]}"
+end
+```
+
+A rule without an explicit event type responds to all three events.
+
+### Match data
+
+Callbacks receive a Ruby MatchData object.
+
+This provides access to the complete matching filename
+and any captured groups.
+
+For example:
+```ruby
+watch('lib/(.+)\.rb$') do |match|
+  puts "File: #{match[0]}"
+  puts "Name: #{match[1]}"
+end
+```
+
+For a file named lib/controller.rb, the callback receives:
+
+| match[0] | lib/controller.rb |
+| match[1] | controller        |
+
+### Rule execution order
+
+Rules are executed in their registration order.
+
+Multiple rules can match the same filename:
+```ruby
+
+watch('\.rb$') do |match|
+  puts "Ruby file detected: #{match[0]}"
+end
+
+watch('_test\.rb$') do |match|
+  puts "Test file detected: #{match[0]}"
+end
+```
+
+Both callbacks execute when a matching test file changes.
+
+## Practical Examples
+
+### Run tests when Ruby files change
+
+```ruby
+watch('test/.*_test\.rb$') do |match|
+  system("bundle exec ruby -I test #{match[0]}")
+end
+
+watch('lib/(.+)\.rb$') do |match|
+  test_file = "test/#{match[1]}_test.rb"
+
+  system("bundle exec ruby -I test #{test_file}") if File.file?(test_file)
+end
+```
+
+### Run the complete test suite
+
+```ruby
+watch('\.rb$', :modified) do
+  system("bundle exec rake test")
+end
+```
+
+### Watch multiple file types
+
+```ruby
+watch('\.(css|scss)$') do |match|
+  puts "Stylesheet changed: #{match[0]}"
+end
+
+watch('\.(js|ts)$') do |match|
+  puts "JavaScript changed: #{match[0]}"
+end
+
+watch('\.(html|erb)$') do |match|
+  puts "Template changed: #{match[0]}"
+end
+```
+
+### Use helper methods
+
+Since watch scripts are ordinary Ruby,
+you can organize your code however you like.
+
+```ruby
+def run_tests(file)
+  system("bundle exec ruby -I test #{file}")
+end
+
+watch('test/.*_test\.rb$') do |match|
+  run_tests(match[0])
+end
+
+watch('lib/(.+)\.rb$') do |match|
+  run_tests("test/#{match[1]}_test.rb")
+end
+```
+
+## Automatic Script Reloading
+
+*Cuco* monitors its own watch script.
+
+Whenever the script changes, *Cuco* automatically reloads it.
+There is no need to restart the process.
+
+This makes experimenting with watch rules particularly convenient.
+
+*Cuco* also handles unsuccessful reloads gracefully:
+
+- Successful reload: The previous rules are replaced with the new rules
+- Failed reload: The previous rules remain active
+- Script removed: All registered rules are cleared.
+
+The last successfully loaded rules therefore remain available
+even if an edited script contains a syntax or runtime error.
 
 ## Command-line options
 
@@ -149,12 +270,37 @@ Options:
     -h, --help     Show this message
 ```
 
-## Miscellaneous
+### Examples:
+
+Start Cuco using the default .watchr script:
+```ruby
+$ cuco
+```
+
+Specify a custom script:
+```ruby
+$ cuco scripts/development.watchr
+```
+
+Enable debugging output:
+```ruby
+$ cuco --debug
+```
+
+Display the installed version:
+```ruby
+$ cuco --version
+```
+
+## .Inspiration
 
 *Cuco* is heavily inspired by:
 
-* gem watchr
-* gem observr (a follow-up of gem watchr)
+* watchr
+* observr
 
-Copyright (c) 2024-2026 Dittmar Krall (www.matiq.com),
-released under the [MIT license](https://opensource.org/licenses/MIT).
+## License
+
+Copyright (c) 2024-2026 Dittmar Krall (www.matiq.com).
+
+Released under the [MIT license](https://opensource.org/licenses/MIT).
