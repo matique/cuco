@@ -33,15 +33,18 @@ That's all it takes to get started.
 
 *Cuco* is:
 
+| :---        |    :----   |
 | Simple       | a small and straightforward API |
 | Flexible     | watch rules are ordinary Ruby code |
 | Event-driven | powered by the listen gem |
 | Portable     | runs wherever Ruby runs |
 
-* Simple to use
-* Highly flexible
-* Evented               ( uses gem listen )
-* Portable              ( Ruby )
+&nbsp; | &nbsp;
+------ | -----
+Stuff  | More things
+
+
+
 
 ## Requirements
 
