@@ -6,11 +6,25 @@
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-168AFE.svg)](https://github.com/standardrb/standard)
 [![MIT License](https://img.shields.io/badge/license-MIT-168AFE.svg)](http://choosealicense.com/licenses/mit/)
 
-*Cuco* watches files in a directory and take an action when they change.
+A simple file-watching utility written in Ruby.
 
-*Cuco* is controlled by a user-supplied script file.
+*Cuco* watches a directory for filesystem changes and
+executes callbacks when filenames match registered patterns.
+
+Watch rules are defined in a user-supplied Ruby script
+(usually called .watchr).
 Intermixed "watch" commands specify what to do
 for the particular modified files.
+
+### Features
+
+* Watch files using strings or regular expressions
+* React to added, modified, and removed files
+* Filter rules by event type
+* Access regular-expression matches inside callbacks
+* Reload the watch script automatically when it changes
+* Preserve previously loaded rules when a script fails to load
+* Execute multiple matching rules in registration order
 
 *Cuco* is:
 
@@ -19,27 +33,39 @@ for the particular modified files.
 * Evented               ( uses gem listen )
 * Portable              ( Ruby )
 
-Most importantly it is **agnostic** to:
-
-* Test frameworks
-* Web frameworks
-
 ## Installation
 
 ```ruby
 $ gem install cuco
 ```
 
+It requires:
+
+- Ruby 3.2 or newer
+- Bundler
+
 ## Usage
 
+Create a _.watchr_ file in your project directory:
+
 ```ruby
-$ cuco          # default script file is .watchr
- Or
-$ cuco path/to/script/file
+# .watchr
+puts "Hello World"
+watch(".*\.rb$") do |match|
+  # Callback
+  puts "Ruby file changed: #{match[0]}"
+end
 ```
 
-will monitor files in the current directory tree
-and react to events on those files in accordance with the script.
+Start Cuco:
+
+```ruby
+$ cuco
+```
+
+*Cuco* now monitors the current working directory
+and executes the callback whenever a matching file
+is added, modified, or removed.
 
 ## A simple example of a script file
 
@@ -60,21 +86,68 @@ Signal.trap("INT")  { abort("Interrupted\n") }     # Ctrl-C
 
 ## Script
 
-Scripts are pure Ruby.
+Scripts are pure Ruby:
 
-Intermixed are "watch" rules that match observed files to an action.
-The matching is achieved by a pattern (a regular expression) parameter.
+```ruby
+puts "Hello World"
+
+watch(".*\.rb$") do |match|
+  # Callback
+  puts "Ruby file changed: #{match[0]}"
+end
+```
+
+Intermixed are _watch_ rules that match observed files to an action.
+The matching is achieved by a _match specification_.
 The action is specified by a block (see above sample).
 
-Updates to script files are picked up on the fly (no need to restart *cuco*)
+Updates to the _script_ file are picked up
+on the fly (no need to restart *cuco*),
 so experimenting is painless.
+If loading the new script fails,
+the previously registered rules are preserved.
+
+If the watch script is removed, its registered rules are cleared.
 
 It's easy to see why *cuco* is so flexible,
 since the whole command is custom.
 The above actions could just as easily call "jruby", "ruby --rubygems",
 "ruby -I lib", etc. or any combination of these.
 
-See directory _scripts_ for samples.
+See directory _scripts_ for more samples.
+
+## Match Specification
+
+The _watch_ method registers a rule consisting of a filename _pattern_
+and an optional _event type_.
+
+Rules are executed in registration order.
+
+_Patterns_ can be strings (converted to regular expressions)
+or regular expressions:
+
+By default, a rule matches all three filesystem _event types_:
+
+- :added
+- :modified
+- :removed
+
+You can restrict a rule to a specific _event type_:
+
+```ruby
+watch('\.rb$', :modified) do |match|
+  puts "Modified: #{match[0]}"
+end
+```
+
+## Command-line options
+
+```ruby
+Options:
+    -d, --debug    Debugging output
+    -v, --version  Show version
+    -h, --help     Show this message
+```
 
 ## Miscellaneous
 
