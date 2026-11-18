@@ -44,6 +44,19 @@ That's all it takes to get started.
 Stuff  | More things
 
 
+| | |
+|---|---|
+| sdasda | asdsa |
+
+
+|       |          |
+|-------|----------|
+| Alice | Engineer |
+| Bob   | Designer |
+
+
+
+
 
 
 ## Requirements
@@ -295,12 +308,12 @@ Display the installed version:
 $ cuco --version
 ```
 
-## .Inspiration
+## Inspiration
 
 *Cuco* is heavily inspired by:
 
-* watchr
-* observr
+* gem watchr
+* gem observr
 
 ## License
 
