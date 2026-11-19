@@ -22,4 +22,3 @@ module R
     attr_accessor :result
   end
 end
-

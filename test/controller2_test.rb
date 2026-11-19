@@ -1,24 +1,25 @@
 require "test_helper"
 
 describe Controller do
-  let(:cntrl) { Controller.instance }
+  let(:controller) { Controller.instance }
 
   def setup
-    R.result = "".dup
+    R.result = +""
     G.init
-    Script.load <<~EOS
+    Script.load <<~RUBY
       watch("file")            { R.result << "n" }
       watch("file", :added)    { R.result << "a" }
       watch("file", :modified) { R.result << "m" }
-    EOS
+    RUBY
   end
 
   def teardown
-    cntrl.stop
+    controller.stop
+    Script.reset
   end
 
   it "fails with unknown what pattern" do
-    cntrl.send(:run_file, "fail", nil)
+    controller.send(:run_file, "fail", nil)
     assert_equal "", R.result
   end
 
@@ -40,14 +41,25 @@ describe Controller do
       R.result << m[1]
     }"
 
-    cntrl.send(:run_file, "abc", nil)
+    controller.send(:run_file, "abc", nil)
     assert_equal "abcc", R.result
+  end
+
+  it "executes matching callbacks in registration order" do
+    Script.load <<~RUBY
+      watch("abc") { R.result << "1" }
+      watch("abc") { R.result << "2" }
+    RUBY
+
+    controller.send(:run_file, "abc")
+
+    assert_equal "12", R.result
   end
 
   private
 
   def check(type, expected)
-    cntrl.send(:run_file, "file", type)
+    controller.send(:run_file, "file", type)
     assert_equal expected, R.result
   end
 end

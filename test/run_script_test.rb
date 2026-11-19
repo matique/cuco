@@ -1,11 +1,5 @@
 require "test_helper"
 
-#class R
-#  class << self
-#    attr_accessor :acc
-#  end
-#end
-
 describe Script, "run" do
   def setup
     R.result = []
