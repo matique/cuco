@@ -16,3 +16,10 @@ $LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 require "controller"
 require "global"
 require "script"
+
+module R
+  class << self
+    attr_accessor :result
+  end
+end
+

@@ -1,10 +1,10 @@
 require "test_helper"
 
-module R
-  class << self
-    attr_accessor :result
-  end
-end
+#class R
+#  class << self
+#    attr_accessor :acc
+#  end
+#end
 
 describe Script, "run" do
   def setup

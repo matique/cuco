@@ -8,7 +8,6 @@ describe G, "Global" do
   it "prints configuration when enabled" do
     out, err = capture_io do
       G.init({debug: true})
-#      G.print_config
     end
 
     assert_empty err
