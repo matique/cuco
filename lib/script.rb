@@ -7,7 +7,6 @@ module Script
     attr_reader :rules
 
     def reset = @rules = []
-    def debug = G.debug
 
     def load(source, filename = "(cuco)")
       previous = rules
@@ -20,7 +19,7 @@ module Script
     end
 
     def dispatch(filename, event_type = nil)
-      puts "*** Script.run(#{filename}, #{event_type})" if debug
+      G.log "Script.run(#{filename}, #{event_type})"
       rules.dup.each do |rule|
         next if rule.event_type && rule.event_type != event_type
 

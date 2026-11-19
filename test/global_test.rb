@@ -5,12 +5,15 @@ describe G, "Global" do
     G.init
   end
 
-  it "prints configuration" do
+  it "prints configuration when enabled" do
     out, err = capture_io do
-      G.print_config
+      G.init({debug: true})
+#      G.print_config
     end
 
     assert_empty err
+    assert_match(/Cuco starts/, out)
+    assert_match(/options/, out)
     assert_match(/scriptname/, out)
     assert_match(/\.watchr/, out)
     assert_match(/pwd/, out)
@@ -26,17 +29,6 @@ describe G, "Global" do
     G.init({}, ["custom.watchr"])
 
     assert_equal File.join(G.pwd, "custom.watchr"), G.scriptname
-  end
-
-  it "prints debug information when enabled" do
-    out, = capture_io do
-      G.init({debug: true})
-    end
-
-    assert_match(/Cuco starts/, out)
-    assert_match(/options/, out)
-    assert_match(/pwd/, out)
-    assert_match(/scriptname/, out)
   end
 
   it "does not print debug information by default" do

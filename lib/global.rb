@@ -8,14 +8,18 @@ module G
       @pwd = File.realpath(Dir.pwd)
       @scriptname = File.expand_path(argv.first || ".watchr", pwd)
 
-      puts "*** Cuco starts at #{Time.now}" if debug
+      log "Cuco starts at #{Time.now}"
       print_config if debug
     end
 
+    def log(message)
+      puts "*** #{message}" if debug
+    end
+
     def print_config
-      puts "*** options #{@options.inspect}"
-      puts "*** pwd     <#{pwd}>"
-      puts "*** scriptname <#{scriptname}>"
+      log "options #{@options.inspect}"
+      log "pwd     <#{pwd}>"
+      log "scriptname <#{scriptname}>"
     end
   end
 end

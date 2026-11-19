@@ -1,7 +1,7 @@
 require "test_helper"
 
 describe Controller do
-  let(:cntrl) { Controller.instance }
+  let(:controller) { Controller.instance }
   let(:regexp) { '.*\.rb' }
 
   def setup
@@ -10,33 +10,37 @@ describe Controller do
 
   def teardown
     Script.reset
-    cntrl.stop
+    controller.stop
   end
 
-  it "stops" do
-    cntrl.stop
+  describe "#stop" do
+    it "stops the listener" do
+      controller.stop
 
-    assert_nil cntrl.listener
-  end
+      assert_nil controller.listener
+    end
 
-  it "propagates callback exceptions" do
-    Script.load "watch('#{regexp}') { raise IOError }"
+    it "can be called multiple times" do
+      controller.stop
+      controller.stop
 
-    assert_raises(IOError) do
-      cntrl.send(:run_file, "a.rb")
+      assert_nil controller.listener
     end
   end
 
-  it "does not execute nonmatching rules" do
-    Script.load "watch('#{regexp}') { raise IOError }"
+  describe "#run_file" do
+    it "propagates callback exceptions" do
+      Script.load "watch('#{regexp}') { raise IOError }"
 
-    cntrl.send(:run_file, "a.txt")
-  end
+      assert_raises(IOError) do
+        controller.send(:run_file, "a.rb")
+      end
+    end
 
-  it "can stop multiple times" do
-    cntrl.stop
-    cntrl.stop
+    it "does not execute nonmatching rules" do
+      Script.load "watch('#{regexp}') { raise IOError }"
 
-    assert_nil cntrl.listener
+      controller.send(:run_file, "a.txt")
+    end
   end
 end
