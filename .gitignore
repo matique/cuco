@@ -1,6 +1,5 @@
 # ~/.gitignore included
 
-.bundle/
 .watchr
 
 **/*.log
